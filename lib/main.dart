@@ -1,26 +1,22 @@
-import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:test_projects/app_notification/push_notification.dart';
+import 'awesome_notify.dart';
 import 'firebase_options.dart';
-import 'home.dart';
 import 'notification.dart';
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
-  // LocalNotification().initNotification();
+  AwesomeNotifications().initialize(null, [
+    NotificationChannel(channelKey: "channelKey", channelName: "channelName", channelDescription: "channelDescription"),
+
+  ],debug: true,);
+
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   runApp(MyApp());
-
-}
-
-@pragma("vm:entry-point")
-Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message)async{
-  await Firebase.initializeApp();
-  print(message.notification?.title);
 
 }
 
@@ -32,11 +28,15 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
 
   NotificationServices notificationServices = NotificationServices();
+  AwesomeNotify notify = AwesomeNotify();
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+
+    notify.requestNotificationPermission();
+
     notificationServices.firebaseInit();
     notificationServices.isTokenRefresh();
     notificationServices.requestNotificationPermission();
@@ -50,28 +50,34 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Button Project',
-      home: MyHomePage(title: '',),
-      // Scaffold(
-      //   appBar: AppBar(
-      //     title: Text('Button Example'),
-      //   ),
-      //   body: Center(
-      //     child: ElevatedButton(
-      //       onPressed: () {
-      //
-      //
-      //         // Add functionality for when the button is pressed
-      //         print('Button Pressed!');
-      //       },
-      //       child: Text('Press Me'),
-      //     ),
-      //   ),
-      // ),
+      home: Scaffold(
+        appBar: AppBar(
+          title: Text('Button Example'),
+        ),
+        body: Center(
+          child: ElevatedButton(
+            onPressed: () {
+              // AwesomeNotify().triggerNotification();
+              LocalNotification().showNotification(
+                  title: "message.notification!.title.toString()",
+                  body: "message.notification!.title.toString())");
+              // NotificationServiceLocal().showNotification(
+              //   id: 0,
+              //   title: "Title",
+              //   body: "body",
+              // );
+              // Add functionality for when the button is pressed
+              print('Button Pressed!');
+            },
+            child: Text('Press Me'),
+          ),
+        ),
+      ),
     );
   }
 }
 // import 'package:flutter/material.dart';
-
+//
 // void main() {
 //   runApp(MyApp());
 // }

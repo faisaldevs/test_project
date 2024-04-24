@@ -1,6 +1,7 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
+import '../awesome_notify.dart';
 import '../notification.dart';
 
 class NotificationServices {
@@ -15,9 +16,10 @@ class NotificationServices {
       print(message.notification?.body.toString());
 
       // showNotification(message);
-      LocalNotification().showNotification(
-          title: message.notification!.title.toString(),
-          body: message.notification!.title.toString());
+      // LocalNotification().showNotification(
+      //     title: message.notification!.title.toString(),
+      //     body: message.notification!.title.toString());
+      AwesomeNotify().triggerNotification( message.notification!.title.toString(), message.notification!.body.toString());
     });
   }
 
